@@ -2,7 +2,29 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Raxdiam, Photino</Authors>
+    <Company>Raxdiam, TryPhotino</Company>
+    <Description>API for OS-level operations from front-end via Photino.NET</Description>
+    <PackageProjectUrl>https://github.com/Raxdiam/Photino.API</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Raxdiam/Photino.API</RepositoryUrl>
+    <PackageTags>photino</PackageTags>
+    <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".", ""))</RootNamespace>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>1.0.0-alpha</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <EmbeddedResource Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </EmbeddedResource>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Photino.NET" Version="2.0.11" />

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Photino.API", "Photino.API\Photino.API.csproj", "{B0F76216-8D34-4C56-AABB-D5F9A339DA90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{6B7B4CE9-AA4B-4E54-823D-7255D2741C20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B0F76216-8D34-4C56-AABB-D5F9A339DA90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0F76216-8D34-4C56-AABB-D5F9A339DA90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0F76216-8D34-4C56-AABB-D5F9A339DA90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B7B4CE9-AA4B-4E54-823D-7255D2741C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B7B4CE9-AA4B-4E54-823D-7255D2741C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B7B4CE9-AA4B-4E54-823D-7255D2741C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B7B4CE9-AA4B-4E54-823D-7255D2741C20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
