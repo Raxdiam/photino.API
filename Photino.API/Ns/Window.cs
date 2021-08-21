@@ -1,4 +1,7 @@
-﻿namespace PhotinoAPI.Ns
+﻿using System.Drawing;
+using System.Text;
+
+namespace PhotinoAPI.Ns
 {
     [PhotonName("window")]
     public class Window : PhotonApiBase
@@ -10,6 +13,9 @@
 
         [PhotonName("setSize")]
         public void SetSize(int width, int height) => Window.SetSize(width, height);
+
+        [PhotonName("setLocation")]
+        public void SetLocation(int x, int y) => Window.SetLocation(new Point(x, y));
 
         [PhotonName("maximize")]
         public void Maximize() => Window.Maximized = true;
@@ -23,6 +29,15 @@
             if (Window.Maximized) Window.Maximized = false;
             if (Window.Minimized) Window.Minimized = false;
         }
+
+        [PhotonName("setDevToolsEnabled")]
+        public void SetDevToolsEnabled(bool enabled) => Window.SetDevToolsEnabled(enabled);
+
+        [PhotonName("setContextMenuEnabled")]
+        public void SetContextMenuEnabled(bool enabled) => Window.SetContextMenuEnabled(enabled);
+
+        [PhotonName("setTopMost")]
+        public void SetTopMost(bool topMost) => Window.SetTopMost(topMost);
 
         /*[PhotonName("show")]
         public void Show() => Window.;

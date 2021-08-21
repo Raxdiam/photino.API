@@ -9,9 +9,16 @@ namespace PhotinoAPI.Ns
     {
         public IO(PhotonManager manager) : base(manager) { }
         
-        [PhotonName("readFile")]
-        public static string ReadFile(string path, string encoding = null) =>
+        [PhotonName("readFileText")]
+        public static string ReadFileText(string path, string encoding = null) =>
             encoding == null ? File.ReadAllText(path) : File.ReadAllText(path, Encoding.GetEncoding(encoding));
+
+        [PhotonName("readFileLines")]
+        public static string[] ReadFileLines(string path, string encoding = null) =>
+            encoding == null ? File.ReadAllLines(path) : File.ReadAllLines(path, Encoding.GetEncoding(encoding));
+
+        [PhotonName("readFile")]
+        public static byte[] ReadFile(string path) => File.ReadAllBytes(path);
 
         [PhotonName("listFiles")]
         public static string[] ListFiles(string path, string searchPattern = null, bool recursive = false)
