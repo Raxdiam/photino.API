@@ -1,2 +1,2 @@
 # Photino.API
- API for OS-level operations from front-end via Photino.NET
+API for performing back-end logic via Photino.NET and .NET 5 from the font-end.
