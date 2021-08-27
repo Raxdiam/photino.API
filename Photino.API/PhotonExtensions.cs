@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using PhotinoNET;
 
@@ -12,6 +13,12 @@ namespace PhotinoAPI
         public static PhotinoWindow RegisterPhotonManager(this PhotinoWindow window, PhotonManager manager)
         {
             manager.SetWindow(window);
+            return window;
+        }
+
+        public static PhotinoWindow LoadResource(this PhotinoWindow window, string name)
+        {
+            window.LoadRawString(PhotonUtil.GetResourceString(Assembly.GetCallingAssembly(), name));
             return window;
         }
     }

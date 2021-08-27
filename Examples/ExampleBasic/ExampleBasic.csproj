@@ -10,19 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="wwwroot\index.html" />
+    <EmbeddedResource Include="wwwroot\index.html">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Photino.NET" Version="2.0.11" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Photino.API\Photino.API.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="GUI\" />
+    <ProjectReference Include="..\..\Photino.API\Photino.API.csproj" />
   </ItemGroup>
 
 </Project>

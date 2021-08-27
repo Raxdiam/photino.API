@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using PhotinoAPI.Ns;
 using PhotinoNET;
+using static PhotinoAPI.Win32.NativeMethods;
 
 namespace PhotinoAPI
 {
@@ -14,6 +16,9 @@ namespace PhotinoAPI
         private static readonly Dictionary<string, Dictionary<string, MethodInfo>> methodMap = new();
         private static readonly Dictionary<string, PhotonApiBase> instMap = new();
 
+        private PhotinoWindow _window;
+        private bool _handleHitTest;
+
         public PhotonManager()
         {
             Register<IO>();
@@ -22,7 +27,43 @@ namespace PhotinoAPI
             Register<Window>();
         }
 
-        public PhotinoWindow Window { get; private set; }
+        public static bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        public static bool IsLinux => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+        public static bool IsFreeBSD => RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
+        public static bool IsOSX => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+        public PhotinoWindow Window {
+            get => _window;
+            private set => _window = value;
+        }
+
+        /// <summary>
+        /// *** Windows Only ***
+        /// <br/>Handles drag and resize hit tests via web message
+        /// <br/>Web message hit test codes:
+        /// <br/>- drag (Drag window)
+        /// <br/>- rtl (Resize top-left)
+        /// <br/>- rtr (Resize top-right)
+        /// <br/>- rbl (Resize bottom-left)
+        /// <br/>- rbr (Resize bottom-right)
+        /// <br/>- rl (Resize left)
+        /// <br/>- rt (Resize top)
+        /// <br/>- rr (Resize right)
+        /// <br/>- rb (Resize bottom)
+        /// </summary>
+        public bool HandleHitTest {
+            get => _handleHitTest;
+            set {
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
+                if (_window != null) {
+                    _window.WebMessageReceivedHandler -= OnHitTestWebMessageReceived;
+                    if (value) {
+                        _window.WebMessageReceivedHandler += OnHitTestWebMessageReceived;
+                    }
+                }
+                _handleHitTest = value;
+            }
+        }
         
         public PhotonManager Register<T>() where T : PhotonApiBase
         {
@@ -51,8 +92,45 @@ namespace PhotinoAPI
             return this;
         }
 
+        private void OnHitTestWebMessageReceived(object sender, string message)
+        {
+            switch (message) {
+                case "drag":
+                    HitTest(_window, HT_CAPTION);
+                    break;
+                case "rtl": //Top Left
+                    HitTest(_window, HT_TOPLEFT);
+                    break;
+                case "rtr": // Top Right
+                    HitTest(_window, HT_TOPRIGHT);
+                    break;
+                case "rbl": // Bottom Left
+                    HitTest(_window, HT_BOTTOMLEFT);
+                    break;
+                case "rbr": //Bottom Right
+                    HitTest(_window, HT_BOTTOMRIGHT);
+                    break;
+                case "rl": // Left
+                    HitTest(_window, HT_LEFT);
+                    break;
+                case "rt": // Top
+                    HitTest(_window, HT_TOP);
+                    break;
+                case "rr": // Right
+                    HitTest(_window, HT_RIGHT);
+                    break;
+                case "rb": // Bottom
+                    HitTest(_window, HT_BOTTOM);
+                    break;
+            }
+        }
+
         private void OnWebMessageReceived(object sender, string message)
         {
+            if (!message.StartsWith("api{")) return;
+
+            message = message.Remove(0, 3);
+
             var req = JsonSerializer.Deserialize<PhotonRequest>(message, jsonOptions);
             if (req == null) return;
 
@@ -114,6 +192,12 @@ namespace PhotinoAPI
             }
         }
 
+        private static void HitTest(PhotinoWindow window, int hitTest)
+        {
+            ReleaseCapture();
+            SendMessage(window.WindowHandle, WM_NCLBUTTONDOWN, hitTest, 0);
+        }
+
         private void SendError(ref PhotonResponse res, string message) => Send(ref res, PhotonStatus.Error, message: message);
         private void SendError(ref PhotonResponse res, Exception ex) => SendError(ref res, $"{ex.Message}\n{ex.StackTrace}");
 
@@ -131,6 +215,7 @@ namespace PhotinoAPI
         {
             Window = window;
             Window.RegisterWebMessageReceivedHandler(OnWebMessageReceived);
+            HandleHitTest = _handleHitTest;
         }
     }
 }

@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using static PhotinoAPI.Win32.NativeMethods;
 
 namespace PhotinoAPI.Win32
 {
     public static class MessageBox
     {
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern int MessageBoxA(IntPtr hWnd,
-            string lpText,
-            string lpCaption,
-            uint uType);
-        
         public static MessageBoxResult Show(IntPtr owner, string text)
         {
             return (MessageBoxResult)MessageBoxA(owner, text, "\0", (uint)MessageBoxButtons.Ok);

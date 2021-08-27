@@ -11,6 +11,18 @@ namespace PhotinoAPI.Ns
     {
         public OS(PhotonManager manager) : base(manager) { }
 
+        [PhotonName("isWindows")]
+        public static bool IsWindows() => PhotonManager.IsWindows;
+
+        [PhotonName("isLinux")]
+        public static bool IsLinux() => PhotonManager.IsLinux;
+
+        [PhotonName("isFreeBSD")]
+        public static bool IsFreeBSD() => PhotonManager.IsFreeBSD;
+
+        [PhotonName("isOSX")]
+        public static bool IsOSX() => PhotonManager.IsOSX;
+
         [PhotonName("joinPaths")]
         public static string JoinPaths(string[] paths) => Path.Join(paths);
 
@@ -28,7 +40,7 @@ namespace PhotinoAPI.Ns
         {
             var safeTitle = title ?? "Open";
 
-            if (IsWindows) {
+            if (IsWindows()) {
                 var ofd = new OpenFileDialog {
                     Title = safeTitle,
                     Filter = filters?.Select(f => $"{f.Name}|{f.Patterns.Join(";")}").Join("|"),
@@ -38,7 +50,7 @@ namespace PhotinoAPI.Ns
                 return new(success, success ? ofd.FileName : null, success ? ofd.FileNames : null);
             }
 
-            if (IsLinux || IsFreeBSD) {
+            if (IsLinux() || IsFreeBSD()) {
                 var filter = filters?.Select(f => $"--file-filter='{f.Name}|{f.Patterns.Join(" ")}'").Join(" ");
                 var command = $"zenity --file-selection --title='{safeTitle}'{(filters is { Length: > 0 } ? " " + filter : "")}";
                 var output = Term.Execute(command);
@@ -46,13 +58,14 @@ namespace PhotinoAPI.Ns
                 return new(success, success ? output : null); //TODO: multiselect output
             }
 
-            if (IsOSX) {
+            if (IsOSX()) {
                 DialogFilter bad;
                 if ((bad = filters.FirstOrDefault(f => f.Patterns.Contains("*.*"))) != null) {
                     var tempList = filters.ToList();
                     tempList.Remove(bad);
                     filters = tempList.ToArray();
                 }
+
                 var filter = filters is { Length: > 0 } ? "{ " + filters.SelectMany(f => f.Patterns).Select(f => $"\"{f.Replace("*.", "")}\"").Join(", ") + " }" : null;
                 var command = $"osascript -e 'POSIX path of (choose file with prompt \"{safeTitle}\"{(filter != null ? $" of type {filter}" : "")})'";
                 var output = Term.Execute(command);
@@ -62,25 +75,25 @@ namespace PhotinoAPI.Ns
 
             return new();
         }
-        
+
         [PhotonName("showOpenFolderDialog")]
         public DialogResult ShowOpenFolderDialog(string title)
         {
             var safeTitle = title ?? "Open";
 
-            if (IsWindows) {
+            if (IsWindows()) {
                 var ofd = new OpenFolderDialog { Title = safeTitle };
                 var success = ofd.ShowDialog(Window.WindowHandle);
                 return new(success, success ? ofd.Folder : null);
             }
 
-            if (IsLinux || IsFreeBSD) {
+            if (IsLinux() || IsFreeBSD()) {
                 var command = $"zenity --file-selection --title='{safeTitle}' --directory";
                 var output = Cmd(command);
                 return new() { Success = !output.IsVoid(), Path = output };
             }
 
-            if (IsOSX) {
+            if (IsOSX()) {
                 var command = $"osascript -e 'POSIX path of (choose folder with prompt \"{safeTitle}\")";
                 var output = Cmd(command);
                 return new() { Success = !output.IsVoid(), Path = output };
@@ -94,16 +107,16 @@ namespace PhotinoAPI.Ns
         {
             var safeTitle = title ?? "Save";
 
-            if (IsWindows) {
+            if (IsWindows()) {
                 var sfd = new SaveFileDialog {
                     Title = safeTitle,
                     Filter = filters?.Select(f => $"{f.Name}|{f.Patterns.Join(";")}").Join("|")
                 };
                 var success = sfd.ShowDialog(Window.WindowHandle);
-                return new(success, success ? sfd.FileName : null, success ? new[] { sfd.FileName } : null );
+                return new(success, success ? sfd.FileName : null, success ? new[] { sfd.FileName } : null);
             }
 
-            if (IsLinux || IsFreeBSD) {
+            if (IsLinux() || IsFreeBSD()) {
                 var filter = filters?.Select(f => $"--file-filter='{f.Name}|{f.Patterns.Join(" ")}'").Join(" ");
                 var command = $"zenity --file-selection --save --title='{safeTitle}'{(filters is { Length: > 0 } ? " " + filter : "")}";
                 var output = Cmd(command);
@@ -111,67 +124,25 @@ namespace PhotinoAPI.Ns
                 return new(success, success ? output : null, success ? new[] { output } : null);
             }
 
-            if (IsOSX) {
+            if (IsOSX()) {
                 DialogFilter bad;
                 if ((bad = filters.FirstOrDefault(f => f.Patterns.Contains("*.*"))) != null) {
                     var tempList = filters.ToList();
                     tempList.Remove(bad);
                     filters = tempList.ToArray();
                 }
+
                 var filter = filters is { Length: > 0 } ? "{ " + filters.SelectMany(f => f.Patterns).Select(f => $"\"{f.Replace("*.", "")}\"").Join(", ") + " }" : null;
                 var command = $"osascript -e 'POSIX path of (choose file name with prompt \"{safeTitle}\"{(filter != null ? $" of type {filter}" : "")})";
                 var output = Cmd(command);
                 return new() { Success = !output.IsVoid(), Path = output, Paths = new[] { output } };
             }
-            
+
             return new();
         }
-        
+
         //TODO: messagebox
-        /*[PhotonName("showMessageBox")]
-        public OSMessageBoxResult ShowMessageBox(string content, string title, OSMessageBoxType? type)
-        {
-            type ??= OSMessageBoxType.Info;
-            content ??= "";
-            title ??= "";
-            
-            if (IsWindows) {
-                var btns = type switch {
-                    OSMessageBoxType.Info => MessageBoxButtons.Ok
-                };
-                var dr = MessageBox.Show(Window.WindowHandle, content, title);
-                
-            }
-
-            return new();
-        }*/
     }
-
-    /*public class OSDialogOptions
-    {
-        public OSDialogFilter[] Filters { get; set; }
-
-    }
-
-    public class OSDialogFilter
-    {
-        public string Name { get; set; }
-        public string[] Patterns { get; set; }
-    }
-
-    public class OSDialogResult
-    {
-        public bool Success { get; set; }
-        public string Path { get; set; }
-        public string[] Paths { get; set; }
-    }
-
-    public class OSMessageBoxResult
-    {
-        public bool YesOrOk { get; set; }
-        public bool HasError { get; set; }
-        public string Error { get; set; }
-    }*/
 
     public record FileDialogOptions(DialogFilter[] Filters);
     public record DialogFilter(string Name, string[] Patterns);

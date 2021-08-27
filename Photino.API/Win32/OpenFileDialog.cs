@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using static PhotinoAPI.Win32.NativeMethods;
 
 namespace PhotinoAPI.Win32
 {
     public class OpenFileDialog
     {
-        /*[DllImport("Comdlg32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool GetOpenFileName(ref OpenFileName ofn);*/
         private const int MAX_FILE_LENGTH = 4096;
-
-        [DllImport("comdlg32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern bool GetOpenFileName([In, Out] OpenFileName ofn);
-
+        
         /// <summary>
         /// Gets or sets the folder in which the dialog will be opened.
         /// </summary>
@@ -52,26 +48,6 @@ namespace PhotinoAPI.Win32
 
         public bool ShowDialog(IntPtr? ownerHandle = null)
         {
-            /*var ofn = new OpenFileName();
-            ofn.lStructSize = Marshal.SizeOf(ofn);
-            ofn.lpstrFilter = Filter?.Replace("|", "\0") + "\0";
-            var chars = new char[1024];
-            chars[0] = '\0';
-            ofn.lpstrFile = new string(chars);
-            ofn.nMaxFile = ofn.lpstrFile.Length;
-            ofn.lpstrTitle = Title;
-            ofn.lpstrInitialDir = InitialDirectory;
-            ofn.hwndOwner = ownerHandle ?? IntPtr.Zero;
-            /*var flags = MultiSelect ? OpenSaveFileDialogFlags.OFN_ALLOWMULTISELECT : OpenSaveFileDialogFlags.OFN_EXPLORER;
-            ofn.Flags = (int) flags;#1#
-
-            if (MultiSelect) {
-                ofn.Flags |= (int)(OpenSaveFileDialogFlags.OFN_ALLOWMULTISELECT | OpenSaveFileDialogFlags.OFN_EXPLORER | OpenSaveFileDialogFlags.OFN_FILEMUSTEXIST | OpenSaveFileDialogFlags.OFN_PATHMUSTEXIST);
-            }
-            var result = GetOpenFileName(ref ofn) ? DialogResult.OK : DialogResult.Cancel;
-            FileName = ofn.lpstrFile;
-            return result;*/
-
             var ofn = new OpenFileName();
             ofn.structSize = Marshal.SizeOf(ofn);
             ofn.filter = Filter?.Replace("|", "\0") + "\0";

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using static PhotinoAPI.Win32.NativeMethods;
 
 namespace PhotinoAPI.Win32
 {
     public class SaveFileDialog
     {
         private const int MAX_FILE_LENGTH = 4096;
-
-        [DllImport("Comdlg32.dll", CharSet=CharSet.Auto, SetLastError=true)]
-        private static extern bool GetSaveFileName([In, Out] OpenFileName lpofn);
         
         /// <summary>
         /// Gets or sets the folder in which the dialog will be opened.

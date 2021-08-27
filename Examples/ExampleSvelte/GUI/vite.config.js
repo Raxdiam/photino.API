@@ -9,7 +9,6 @@ export default defineConfig(({ mode }) => {
   const production = mode === 'production';
 
   return {
-    publicDir: 'static',
     resolve: {
       alias: {
         $lib: path.resolve(cwd, './src/lib'),
