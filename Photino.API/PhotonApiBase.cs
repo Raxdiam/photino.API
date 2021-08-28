@@ -13,5 +13,6 @@ namespace PhotinoAPI
         protected PhotonManager Manager { get; }
 
         protected PhotinoWindow Window => Manager.Window;
+        
     }
 }

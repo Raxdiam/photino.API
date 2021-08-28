@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using System.Threading.Tasks;
 using PhotinoAPI.Ns;
 using PhotinoNET;
 using static PhotinoAPI.Win32.NativeMethods;
@@ -208,13 +209,23 @@ namespace PhotinoAPI
             res.Data.Status = status;
             res.Data.Return = ret;
             res.Data.Message = message;
-            Window.SendWebMessage(JsonSerializer.Serialize(res, jsonOptions));
+            Window.SendWebMessage("api" + JsonSerializer.Serialize(res, jsonOptions));
+        }
+
+        private void SetupEvents(object sender, EventArgs ea)
+        {
+            // These may be a bit much
+            /*Window.RegisterSizeChangedHandler((_, e) => Window.SendWebMessage($"ev|size|width={e.Width}|height={e.Height}"));
+            Window.RegisterLocationChangedHandler((_, e) => Window.SendWebMessage($"ev|location|x={e.X}|y={e.Y}"));*/
+
+            // TODO: Window focus in/out events
         }
         
         internal void SetWindow(PhotinoWindow window)
         {
             Window = window;
             Window.RegisterWebMessageReceivedHandler(OnWebMessageReceived);
+            Window.RegisterWindowCreatedHandler(SetupEvents);
             HandleHitTest = _handleHitTest;
         }
     }
