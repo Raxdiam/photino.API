@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Text;
 
 namespace PhotinoAPI.Ns
 {
@@ -8,36 +7,47 @@ namespace PhotinoAPI.Ns
     {
         public Window(PhotonManager manager) : base(manager) { }
 
+        [PhotonName("getTitle")]
+        public string GetTitle() => Window.Title;
+
+        [PhotonName("getMaximized")]
+        public bool GetMaximized() => Window.Maximized;
+
+        [PhotonName("getMinimized")]
+        public bool GetMinimized() => Window.Minimized;
+
+        [PhotonName("getDevToolsEnabled")]
+        public bool GetDevToolsEnabled() => Window.DevToolsEnabled;
+
+        [PhotonName("getContextMenuEnabled")]
+        public bool GetContextMenuEnabled() => Window.ContextMenuEnabled;
+
+        [PhotonName("getTopMost")]
+        public bool GetTopMost() => Window.Topmost;
+
         [PhotonName("setTitle")]
         public void SetTitle(string title) => Window.Title = title;
 
         [PhotonName("setSize")]
-        public void SetSize(int width, int height) => Window.SetSize(width, height);
+        public void SetSize(int width, int height) => Window.Size = new Size(width, height);
 
         [PhotonName("setLocation")]
-        public void SetLocation(int x, int y) => Window.SetLocation(new Point(x, y));
+        public void SetLocation(int x, int y) => Window.Location = new Point(x, y);
 
-        [PhotonName("maximize")]
-        public void Maximize() => Window.Maximized = true;
+        [PhotonName("setMaximized")]
+        public void SetMaximized(bool maximized) => Window.Maximized = maximized;
 
-        [PhotonName("minimize")]
-        public void Minimize() => Window.Minimized = true;
-
-        [PhotonName("restore")]
-        public void Restore()
-        {
-            if (Window.Maximized) Window.Maximized = false;
-            if (Window.Minimized) Window.Minimized = false;
-        }
-
+        [PhotonName("setMinimized")]
+        public void SetMinimized(bool minimized) => Window.Minimized = minimized;
+        
         [PhotonName("setDevToolsEnabled")]
-        public void SetDevToolsEnabled(bool enabled) => Window.SetDevToolsEnabled(enabled);
+        public void SetDevToolsEnabled(bool enabled) => Window.DevToolsEnabled = enabled;
 
         [PhotonName("setContextMenuEnabled")]
-        public void SetContextMenuEnabled(bool enabled) => Window.SetContextMenuEnabled(enabled);
+        public void SetContextMenuEnabled(bool enabled) => Window.ContextMenuEnabled = enabled;
 
         [PhotonName("setTopMost")]
-        public void SetTopMost(bool topMost) => Window.SetTopMost(topMost);
+        public void SetTopMost(bool topMost) => Window.Topmost = topMost;
 
         /*[PhotonName("show")]
         public void Show() => Window.;
