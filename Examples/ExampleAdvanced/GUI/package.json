@@ -21,6 +21,7 @@
     "vite-plugin-singlefile": "^0.5.1"
   },
   "dependencies": {
-    "photino-api": "^1.0.7"
+    "@vscode/codicons": "^0.0.21",
+    "photino.js": "link:..\\..\\..\\..\\..\\Web\\photino.js"
   }
 }
