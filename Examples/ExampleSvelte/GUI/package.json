@@ -21,6 +21,6 @@
     "vite-plugin-singlefile": "^0.5.1"
   },
   "dependencies": {
-    "photino-api": "^1.0.7"
+    "photino.js": "^1.0.2"
   }
 }

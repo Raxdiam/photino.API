@@ -38,9 +38,9 @@
 
   <div on:mousedown={handleDrag} id="drag-area">Drag Me</div>
 
-  <button on:click={() => $photino.window.minimize()}>Minimize</button>
-  <button on:click={() => $photino.window.maximize()}>Maximize</button>
-  <button on:click={() => $photino.window.restore()}>Restore</button>
+  <button on:click={() => $photino.window.setMinimized(true)}>Minimize</button>
+  <button on:click={() => $photino.window.setMaximized(true)}>Maximize</button>
+  <button on:click={() => $photino.window.setMaximized(false)}>Restore</button>
   <button on:click={() => $photino.window.close()}>Close</button>
 </div>
 
