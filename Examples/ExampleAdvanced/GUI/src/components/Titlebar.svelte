@@ -2,10 +2,22 @@
   import { photino } from '$stores';
   import { onMount } from 'svelte';
 
-  //TODO: Implement Maximized event on backend and subscribe here to reset the maximize/restore button
+  import icon from '$assets/photino-logo.png';
 
+  const defaultStyles = { 
+    titlebarBgActive: '#3C3C3C', 
+    titlebarBgInactive: '#323233',
+    titlebarTextActive: '#CCCCCC',
+    titlebarTextInactive: '#8E8E8E',
+    titlebarCtrlActive: '#CACACA',
+    titlebarCtrlInactive: '#8C8C8D'
+  }
+  const styles: { titlebarBg?: string, titlebarText?: string, titlebarCtrl?: string } = {};
+  
   let title: string;
   let maxresIcon: string;
+
+  //TODO: Implement Maximized event on backend and subscribe here to reset the maximize/restore button
 
   function handleDrag(e: MouseEvent) {
     $photino.window.drag();
@@ -24,26 +36,38 @@
   const handleMaximizeRestore = async () => {
     const isMaximized = await $photino.window.getMaximized();
     await $photino.window.setMaximized(!isMaximized);
-    maxresIcon = !isMaximized ? 'codicon-chrome-restore' : 'codicon-chrome-maximize';
   };
 
+  $photino.window.on('focusIn', () => { 
+    styles.titlebarBg = defaultStyles.titlebarBgActive; 
+    styles.titlebarText = defaultStyles.titlebarTextActive;
+    styles.titlebarCtrl = defaultStyles.titlebarCtrlActive;
+  });
+  $photino.window.on('focusOut', () => { 
+    styles.titlebarBg = defaultStyles.titlebarBgInactive; 
+    styles.titlebarText = defaultStyles.titlebarTextInactive;
+    styles.titlebarCtrl = defaultStyles.titlebarCtrlInactive;
+  });
+  $photino.window.on('maximized', () => maxresIcon = 'codicon-chrome-restore');
+  $photino.window.on('restored', () => maxresIcon = 'codicon-chrome-maximize');
+
   onMount(async () => {
-    title = await $photino.window.getTitle();
+    title = await $photino.window.getTitle();    
     maxresIcon = (await $photino.window.getMaximized()) ? 'codicon-chrome-restore' : 'codicon-chrome-maximize';
   });
 </script>
 
-<div class="window-titlebar">
+<div class="window-titlebar" style="background-color: {styles.titlebarBg}; color: {styles.titlebarText};">
   <div class="window-title">{title}</div>
 
   <div>
-    <div class="window-icon" />
+    <div class="window-icon"><img src={icon} alt=""></div>
     <div class="window-toolbar" />
   </div>
 
-  <div on:mousedown={handleDrag} class="window-drag-area"></div>
+  <div on:mousedown={handleDrag} class="window-drag-area" />
 
-  <div class="window-buttons">
+  <div class="window-buttons" style="color: {styles.titlebarCtrl} !important;">
     <div on:click={handleMinimize} class="window-button codicon codicon-chrome-minimize" />
     <div on:click={handleMaximizeRestore} class="window-button codicon {maxresIcon}" />
     <div on:click={handleClose} class="window-button window-close codicon codicon-chrome-close" />
@@ -70,6 +94,18 @@
       justify-content: center;
     }
 
+    .window-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 35px;
+      height: 30px;
+
+      & > img {
+        width: 22px;
+      }
+    }
+
     .window-drag-area {
       width: 100%;
       z-index: 2;
@@ -79,18 +115,14 @@
       display: flex;
       align-self: flex-end;
       z-index: 2;
+      //color: #cacaca;
 
-      .window-button {
-        color: #cacaca;
+      .window-button {        
         width: 46px;
         line-height: 30px;
 
         &:hover {
           background-color: #505050;
-        }
-
-        &:focus, &:active {
-          background-color: #3c3c3c;
         }
 
         &.window-close:hover {

@@ -15,6 +15,7 @@ namespace ExampleAdvanced
                 .SetUseOsDefaultSize(false)
                 .SetSize(800, 700)
                 .SetChromeless(true)
+                .SetLogVerbosity(0)
                 .Center()
                 .RegisterPhotonManager(manager)
                 //.LoadResource("index.html");
