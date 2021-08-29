@@ -212,13 +212,18 @@ namespace PhotinoAPI
             Window.SendWebMessage("api" + JsonSerializer.Serialize(res, jsonOptions));
         }
 
-        private void SetupEvents(object sender, EventArgs ea)
+        private async void SetupEvents(object sender, EventArgs ea)
         {
             // These may be a bit much
             /*Window.RegisterSizeChangedHandler((_, e) => Window.SendWebMessage($"ev|size|width={e.Width}|height={e.Height}"));
             Window.RegisterLocationChangedHandler((_, e) => Window.SendWebMessage($"ev|location|x={e.X}|y={e.Y}"));*/
 
-            // TODO: Window focus in/out events
+            await Task.Delay(1000); // An error is thrown about not being able to register events before the window is initiallized without this..
+            Window.RegisterFocusInHandler((_, _) => Window.SendWebMessage("ev|focusIn"));
+            Window.RegisterFocusOutHandler((_, _) => Window.SendWebMessage("ev|focusOut"));
+            Window.RegisterMaximizedHandler((_, _) => Window.SendWebMessage("ev|maximized"));
+            Window.RegisterRestoredHandler((_, _) => Window.SendWebMessage("ev|restored"));
+            Window.RegisterMinimizedHandler((_, _) => Window.SendWebMessage("ev|minimized"));
         }
         
         internal void SetWindow(PhotinoWindow window)
