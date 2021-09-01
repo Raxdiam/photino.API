@@ -17,8 +17,6 @@
   let title: string;
   let maxresIcon: string;
 
-  //TODO: Implement Maximized event on backend and subscribe here to reset the maximize/restore button
-
   function handleDrag(e: MouseEvent) {
     $photino.window.drag();
     e.preventDefault();

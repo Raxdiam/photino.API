@@ -18,8 +18,8 @@ namespace ExampleAdvanced
                 .SetLogVerbosity(0)
                 .Center()
                 .RegisterPhotonManager(manager)
-                //.LoadResource("index.html");
-                .Load("http://localhost:3000");
+                .LoadResource("index.html");
+                //.Load("http://localhost:3000");
 
             window.WaitForClose();
         }
