@@ -28,6 +28,7 @@
         <div class="flex">
           <button id="file-read">Read File</button>
           <select id="file-select"></select>
+          <button id="file-refresh">Refresh</button>
         </div>
         <code id="file-contents"></code>
       </div>
@@ -61,24 +62,34 @@
         await Photino.window.setFullScreen(!(await Photino.window.getFullScreen()));
       }
 
+      
       async function setupReadFile() {
         const elFileRead = document.getElementById('file-read');
         const elFileSelect = document.getElementById('file-select');
         const elFileContents = document.getElementById('file-contents');
+        const elFileRefresh = document.getElementById("file-refresh");
 
-        const fileList = (await Photino.io.listFiles('.')).filter(function (f) {
-          return f.endsWith('.json') || f.endsWith('.txt');
-        });
-        for (const file of fileList) {
-          const elFileOption = document.createElement('option');
-          elFileOption.textContent = file;
-          elFileSelect.appendChild(elFileOption);
+        async function refreshFileList() {
+          const fileList = (await Photino.io.listFiles('.')).filter(function (f) {
+            return f.endsWith('.json') || f.endsWith('.txt');
+          });
+          for (const file of fileList) {
+            const elFileOption = document.createElement('option');
+            elFileOption.textContent = file;
+            elFileSelect.appendChild(elFileOption);
+          }
         }
 
-        elFileRead.addEventListener('click', async function (ev) {
-          const contents = await Photino.io.readFileText(elFileSelect.value);
-          elFileContents.textContent = contents;
+        await refreshFileList();
+
+        elFileRead.addEventListener('click', async function () {
+          elFileContents.textContent = await Photino.io.readFileText(elFileSelect.value);
         });
+
+        elFileRefresh.addEventListener('click', async function () {
+          elFileSelect.querySelectorAll('option').forEach((o) => o.remove());
+          await refreshFileList();
+        })
       }
 
       window.addEventListener('DOMContentLoaded', async function () {
