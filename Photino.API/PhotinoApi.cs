@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -35,6 +34,10 @@ namespace PhotinoAPI
             set => SetWindow(value);
         }
 
+        /// <summary>
+        /// Get or set whether or not PhotinoAPI will handle hit-test messages for resizing and dragging the window.
+        /// This will only work on Windows!
+        /// </summary>
         public bool HandleHitTest {
             get => _handleHitTest;
             set => SetHandleHitTest(value);
@@ -62,7 +65,13 @@ namespace PhotinoAPI
 
             return this;
         }
-        
+
+        /// <summary>
+        /// Set whether or not PhotinoAPI will handle hit-test messages for resizing and dragging the window.
+        /// This will only work on Windows!
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public PhotinoApi SetHandleHitTest(bool value)
         {
             _handleHitTest = value;
@@ -105,6 +114,7 @@ namespace PhotinoAPI
 
             var dir = e.Split(':')[1];
             var hitTest = dir switch {
+                "drag" => PhotinoHitTest.Caption,
                 "se" => PhotinoHitTest.BottomRight,
                 "e" => PhotinoHitTest.Right,
                 "s" => PhotinoHitTest.Bottom,
