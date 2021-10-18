@@ -28,7 +28,7 @@ namespace PhotinoAPI
         {
             _moduleMap = new Dictionary<string, Dictionary<string, PhotinoModuleMethod>>();
         }
-        
+
         public PhotinoWindow Window {
             get => _window;
             set => SetWindow(value);
@@ -186,7 +186,7 @@ namespace PhotinoAPI
             }
         }
 
-        private string TestModuleToTypeScript(Type type)
+        private static string TestModuleToTypeScript(Type type)
         {
             var moduleName = PhotinoUtil.GetModuleName(type);
 
@@ -227,21 +227,13 @@ namespace PhotinoAPI
                 return "Uint8Array";
             }
 
-            switch (type.Name) {
-                case nameof(String):
-                    return "string";
-                case nameof(Boolean):
-                    return "boolean";
-                case nameof(Single):
-                case nameof(Int32):
-                case nameof(Int64):
-                case nameof(Double):
-                    return "number";
-                case "Void":
-                    return "void";
-            }
-
-            return "void";
+            return type.Name switch {
+                nameof(String) => "string",
+                nameof(Boolean) => "boolean",
+                nameof(Single) or nameof(Int32) or nameof(Int64) or nameof(Double) => "number",
+                "Void" => "void",
+                _ => "void",
+            };
         }
     }
 }
