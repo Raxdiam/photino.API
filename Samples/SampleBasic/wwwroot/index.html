@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SampleBasic</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/photino.js@1.0.5/dist/umd/photino.js"></script>
+  </head>
+  <body>
+    <div class="flex col">
+      <div class="flex">
+        <button onclick="minimize()">Minimize</button>
+        <button onclick="maximize()">Maximize</button>
+        <button onclick="close()">Close</button>
+        <button onclick="contextMenu()">Context Menu</button>
+        <button onclick="devTools()">Dev Tools</button>
+        <button onclick="setTitle()">Title</button>
+        <button onclick="topMost()">Top-Most</button>
+        <button onclick="fullScreen()">Full Screen</button>
+      </div>
+
+      <br>
+
+      <div class="flex col">
+        <div class="flex">
+          <button id="file-read">Read File</button>
+          <select id="file-select"></select>
+        </div>
+        <code id="file-contents"></code>
+      </div>
+    </div>
+
+    <script>
+      const Photino = PhotinoAPI.Photino;
+
+      async function minimize() {
+        await Photino.window.setMinimized(true);
+      }
+      async function maximize() {
+        await Photino.window.setMaximized(!(await Photino.window.getMaximized()));
+      }
+      async function close() {
+        await Photino.window.close();
+      }
+      async function contextMenu() {
+        await Photino.window.setContextMenuEnabled(!(await Photino.window.getContextMenuEnabled()));
+      }
+      async function devTools() {
+        await Photino.window.setDevToolsEnabled(!(await Photino.window.getDevToolsEnabled()));
+      }
+      async function setTitle() {
+        await Photino.window.setTitle((await Photino.window.getTitle()) + '*');
+      }
+      async function topMost() {
+        await Photino.window.setTopMost(!(await Photino.window.getTopMost()));
+      }
+      async function fullScreen() {
+        await Photino.window.setFullScreen(!(await Photino.window.getFullScreen()));
+      }
+
+      async function setupReadFile() {
+        const elFileRead = document.getElementById('file-read');
+        const elFileSelect = document.getElementById('file-select');
+        const elFileContents = document.getElementById('file-contents');
+
+        const fileList = (await Photino.io.listFiles('.')).filter(function (f) {
+          return f.endsWith('.json') || f.endsWith('.txt');
+        });
+        for (const file of fileList) {
+          const elFileOption = document.createElement('option');
+          elFileOption.textContent = file;
+          elFileSelect.appendChild(elFileOption);
+        }
+
+        elFileRead.addEventListener('click', async function (ev) {
+          const contents = await Photino.io.readFileText(elFileSelect.value);
+          elFileContents.textContent = contents;
+        });
+      }
+
+      window.addEventListener('DOMContentLoaded', async function () {
+        await setupReadFile();
+      });
+    </script>
+  </body>
+</html>

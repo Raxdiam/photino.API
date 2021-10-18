@@ -1,0 +1,28 @@
+code {
+  border: 1px solid darkgray;
+  border-radius: 3px;
+  padding: 4px;
+  background-color: rgb(250, 250, 250);
+  height: 200px;
+  overflow: auto;
+  white-space: pre;
+}
+
+.flex {
+  display: flex;
+  gap: 4px 4px;
+}
+
+.flex.row {
+  flex-direction: row;
+}
+.flex.row.reverse {
+  flex-direction: row-reverse;
+}
+
+.flex.col {
+  flex-direction: column;
+}
+.flex.col.reverse {
+  flex-direction: column-reverse;
+}
