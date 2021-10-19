@@ -43,7 +43,7 @@ import { Photino } from 'photino.js';
 
 ...or
 
-**As a UMD module**
+**As a UMD module** (download [here](https://unpkg.com/photino.js))
 ```html
 <script src="https://unpkg.com/photino.js"></script>
 ```
