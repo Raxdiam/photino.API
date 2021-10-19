@@ -16,8 +16,7 @@ namespace SampleBasic
                 .SetSize(700, 600)
                 .Center()
                 .RegisterApi(api)
-                //.Load("wwwroot/index.html");
-                .Load("http://localhost:63342/Photino.API/Samples/SampleBasic/wwwroot/index.html?_ijt=nnb27le659bpqqidvt1ino7jkg&_ij_reload=RELOAD_ON_SAVE");
+                .Load("wwwroot/index.html");
 
             window.WaitForClose();
         }
