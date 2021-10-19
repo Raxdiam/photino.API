@@ -53,7 +53,7 @@ const Photino = PhotinoAPI.Photino;
 
 (async function() {
   await Photino.window.setTitle('Custom Title');
-})
+})();
 ```
 
 # The API
