@@ -12,7 +12,7 @@
 	<RepositoryUrl>https://github.com/Raxdiam/photino.API</RepositoryUrl>
 	<PackageTags>photino</PackageTags>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
-	<PackageVersion>1.2.0-alpha</PackageVersion>
+	<PackageVersion>1.2.0-exp</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Photino.NET" Version="2.0.13" />
+    <PackageReference Include="Photino.NET" Version="2.0.20" />
   </ItemGroup>
 
 </Project>
