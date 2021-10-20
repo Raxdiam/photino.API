@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using PhotinoAPI.Modules;
 using PhotinoAPI.Modules.Default;
 using PhotinoNET;
@@ -14,15 +13,12 @@ namespace PhotinoAPI
     public class PhotinoApi
     {
         private static readonly string[] MethodBlacklist = { "GetType", "ToString", "Equals", "GetHashCode" };
-        private static readonly JsonSerializerSettings JsonSettings = new() {
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        };
 
         private readonly Dictionary<string, Dictionary<string, PhotinoModuleMethod>> _moduleMap;
         
         private PhotinoWindow _window;
         private bool _handleHitTest;
+        private PhotinoApiEvents _events;
 
         public PhotinoApi()
         {
@@ -50,6 +46,7 @@ namespace PhotinoAPI
                 if (_handleHitTest)
                     _window.WebMessageReceived -= OnHitTestWebMessageReceived;
                 _moduleMap.Clear();
+                _events.Clear();
             }
 
             _window = window;
@@ -62,6 +59,8 @@ namespace PhotinoAPI
             _window.WebMessageReceived += OnApiModuleWebMessageReceived;
             if (_handleHitTest)
                 _window.WebMessageReceived += OnHitTestWebMessageReceived;
+
+            _events = new PhotinoApiEvents(_window);
 
             return this;
         }
@@ -86,12 +85,12 @@ namespace PhotinoAPI
             }
             return this;
         }
-        
+
         private void OnApiModuleWebMessageReceived(object sender, string e)
         {
             if (!e.StartsWith("api:")) return;
 
-            var reqMsg = JsonConvert.DeserializeObject<PhotinoApiMessage<PhotinoApiRequest>>(e[4..], JsonSettings);
+            var reqMsg = JsonConvert.DeserializeObject<PhotinoApiMessage<PhotinoApiRequest>>(e[4..], PhotinoUtil.JsonSettings);
             if (reqMsg == null) return;
 
             var res = new PhotinoApiResponse();
@@ -104,7 +103,7 @@ namespace PhotinoAPI
             }
 
             var resMsg = new PhotinoApiMessage<PhotinoApiResponse> { Id = reqMsg.Id, Data = res };
-            var resJson = JsonConvert.SerializeObject(resMsg, JsonSettings);
+            var resJson = JsonConvert.SerializeObject(resMsg, PhotinoUtil.JsonSettings);
             Window.SendWebMessage($"api:{resJson}");
         }
 

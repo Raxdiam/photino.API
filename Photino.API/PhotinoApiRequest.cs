@@ -1,4 +1,5 @@
-﻿namespace PhotinoAPI
+﻿#pragma warning disable CS0649
+namespace PhotinoAPI
 {
     /// <summary>
     /// Request data sent by the font-end

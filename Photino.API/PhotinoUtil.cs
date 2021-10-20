@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using PhotinoAPI.Modules;
 using PhotinoNET;
 
@@ -19,6 +21,11 @@ namespace PhotinoAPI
         [DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
 
+        public static readonly JsonSerializerSettings JsonSettings = new() {
+            NullValueHandling = NullValueHandling.Ignore,
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
+        
         public static void HitTest(PhotinoWindow window, PhotinoHitTest hitTest)
         {
             ReleaseCapture();

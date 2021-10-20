@@ -12,6 +12,8 @@
 	<RepositoryUrl>https://github.com/Raxdiam/photino.API</RepositoryUrl>
 	<PackageTags>photino</PackageTags>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageVersion>1.2.0-alpha</PackageVersion>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
