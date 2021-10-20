@@ -51,9 +51,54 @@ namespace PhotinoAPI
                     _window.WindowClosing -= OnWindowClosing;
                     _window.WindowClosing += OnWindowClosing;
                     break;
+                case "focusIn":
+                    _window.WindowFocusIn -= OnWindowFocusIn;
+                    _window.WindowFocusIn += OnWindowFocusIn;
+                    break;
+                case "focusOut":
+                    _window.WindowFocusOut -= OnWindowFocusOut;
+                    _window.WindowFocusOut += OnWindowFocusOut;
+                    break;
+                case "maximize":
+                    _window.WindowMaximized -= OnWindowMaximize;
+                    _window.WindowMaximized += OnWindowMaximize;
+                    break;
+                case "minimise":
+                    _window.WindowMinimized -= OnWindowMinimize;
+                    _window.WindowMinimized += OnWindowMinimize;
+                    break;
+                case "restore":
+                    _window.WindowRestored -= OnWindowRestore;
+                    _window.WindowRestored += OnWindowRestore;
+                    break;
             }
         }
+
+        private void OnWindowFocusIn(object sender, EventArgs e)
+        {
+            _window.SendWebMessage("ev:focusIn");
+        }
         
+        private void OnWindowFocusOut(object sender, EventArgs e)
+        {
+            _window.SendWebMessage("ev:focusOut");
+        }
+        
+        private void OnWindowMaximize(object sender, EventArgs e)
+        {
+            _window.SendWebMessage("ev:maximize");
+        }
+        
+        private void OnWindowMinimize(object sender, EventArgs e)
+        {
+            _window.SendWebMessage("ev:minimize");
+        }
+        
+        private void OnWindowRestore(object sender, EventArgs e)
+        {
+            _window.SendWebMessage("ev:restore");
+        }
+
         private void OnWindowSizeChanged(object sender, Size e)
         {
             _window.SendWebMessage($"ev:size|width={e.Width},height={e.Height}");
