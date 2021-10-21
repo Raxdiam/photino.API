@@ -1,37 +1,47 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace PhotinoAPI.Modules
 {
     internal class PhotinoModuleMethod
     {
-        //private readonly Delegate _delegate;
+        public PhotinoModuleMethod(MethodInfo info, Type moduleType, object moduleInstance = null) => 
+            (Info, ModuleType, ModuleInstance, RequireInstance, IsAsync) = 
+            (info, moduleType, moduleInstance, moduleInstance != null, IsAsyncMethod(info));
 
-        public PhotinoModuleMethod(MethodInfo info, Type moduleType, object moduleInstance = null)
-        {
-            (Info, ModuleType, ModuleInstance, RequireInstance) = (info, moduleType, moduleInstance, moduleInstance != null);
-
-            /*var argTypes = info.GetParameters().Select(parameter => parameter.ParameterType).ToList();
-            argTypes.Add(info.ReturnType);
-            var delegateType = Expression.GetDelegateType(argTypes.ToArray());
-            if (RequireInstance) {
-                _delegate = Delegate.CreateDelegate(delegateType, ModuleInstance, Info);
-            }
-            else {
-                _delegate = Delegate.CreateDelegate(delegateType, Info);
-            }*/
-        }
-        
         public readonly MethodInfo Info;
         public readonly Type ModuleType;
         public readonly object ModuleInstance;
         public readonly bool RequireInstance;
+        public readonly bool IsAsync;
 
         public object Execute(object[] args)
         {
+            if (IsAsync) {
+                return ExecuteAsync(args).GetAwaiter().GetResult();
+            }
+
+            return Info.Invoke(ModuleInstance, ResolveArguments(args));
+        }
+
+        public async Task<object> ExecuteAsync(object[] args)
+        {
+            var allArgs = ResolveArguments(args);
+            if (IsAsync) {
+                return await (dynamic)Info?.Invoke(ModuleInstance, allArgs);
+            }
+
+            return await Task.Run(() => Info.Invoke(ModuleInstance, allArgs));
+        }
+
+        private object[] ResolveArguments(object[] args)
+        {
             var parameters = Info.GetParameters();
             var allArgs = new object[parameters.Length];
-            for (var i = 0; i < parameters.Length; i++) {
+            for (var i = 0; i < parameters.Length; i++)
+            {
                 var param = parameters[i];
                 if (i < args.Length)
                     allArgs[i] = args[i];
@@ -40,8 +50,15 @@ namespace PhotinoAPI.Modules
                 else
                     allArgs[i] = default;
             }
-            var result = Info.Invoke(RequireInstance ? ModuleInstance : null, allArgs);
-            return result;
+
+            return allArgs;
+        }
+
+        private static bool IsAsyncMethod(MethodInfo method)
+        {
+            var attType = typeof(AsyncStateMachineAttribute);
+            var attrib = (AsyncStateMachineAttribute)method.GetCustomAttribute(attType);
+            return attrib != null;
         }
     }
 }

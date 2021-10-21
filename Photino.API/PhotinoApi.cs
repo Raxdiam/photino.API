@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PhotinoAPI.Modules;
 using PhotinoAPI.Modules.Default;
@@ -33,11 +34,18 @@ namespace PhotinoAPI
         /// <summary>
         /// Get or set whether or not PhotinoAPI will handle hit-test messages for resizing and dragging the window.
         /// This will only work on Windows!
+        /// Default: False
         /// </summary>
         public bool HandleHitTest {
             get => _handleHitTest;
             set => SetHandleHitTest(value);
         }
+
+        /// <summary>
+        /// Get or set whether to asynchronously execute module methods.
+        /// Default: True
+        /// </summary>
+        public bool UseAsync { get; set; } = true;
 
         public PhotinoApi SetWindow(PhotinoWindow window)
         {
@@ -68,6 +76,7 @@ namespace PhotinoAPI
         /// <summary>
         /// Set whether or not PhotinoAPI will handle hit-test messages for resizing and dragging the window.
         /// This will only work on Windows!
+        /// Default: False
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -86,7 +95,19 @@ namespace PhotinoAPI
             return this;
         }
 
-        private void OnApiModuleWebMessageReceived(object sender, string e)
+        /// <summary>
+        /// Get or set whether to asynchronously execute module methods.
+        /// Default: True
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public PhotinoApi SetUseAsync(bool value)
+        {
+            UseAsync = value;
+            return this;
+        }
+
+        private async void OnApiModuleWebMessageReceived(object sender, string e)
         {
             if (!e.StartsWith("api:")) return;
 
@@ -95,11 +116,17 @@ namespace PhotinoAPI
 
             var res = new PhotinoApiResponse();
             try {
-                var result = ExecuteModuleMethod(reqMsg.Data.Module, reqMsg.Data.Method, reqMsg.Data.Parameters);
+                object result;
+                if (UseAsync) {
+                    result = await ExecuteModuleMethodAsync(reqMsg.Data.Module, reqMsg.Data.Method, reqMsg.Data.Parameters);
+                }
+                else {
+                    result = ExecuteModuleMethod(reqMsg.Data.Module, reqMsg.Data.Method, reqMsg.Data.Parameters);
+                }
                 res.Result = result;
             }
             catch (Exception ex) {
-                res.Error = ex.InnerException?.Message;
+                res.Error = ex.InnerException?.Message ?? e;
             }
 
             var resMsg = new PhotinoApiMessage<PhotinoApiResponse> { Id = reqMsg.Id, Data = res };
@@ -132,16 +159,28 @@ namespace PhotinoAPI
         
         public object ExecuteModuleMethod(string moduleName, string methodName, params object[] args)
         {
+            ValidateModuleMethod(moduleName, methodName, out var methodMap);
+
+            return methodMap[methodName].Execute(args);
+        }
+
+        public async Task<object> ExecuteModuleMethodAsync(string moduleName, string methodName, params object[] args)
+        {
+            ValidateModuleMethod(moduleName, methodName, out var methodMap);
+
+            return await methodMap[methodName].ExecuteAsync(args);
+        }
+
+        private void ValidateModuleMethod(string moduleName, string methodName, out Dictionary<string, PhotinoModuleMethod> methodMap)
+        {
             if (!_moduleMap.ContainsKey(moduleName)) {
                 throw new Exception($"[{nameof(PhotinoApi)}.{nameof(ExecuteModuleMethod)}] Cannot find module '{moduleName}'");
             }
 
-            var methodMap = _moduleMap[moduleName];
+            methodMap = _moduleMap[moduleName];
             if (!methodMap.ContainsKey(methodName)) {
                 throw new Exception($"[{nameof(PhotinoApi)}.{nameof(ExecuteModuleMethod)}] Cannot find method '{methodMap}' in module '{moduleName}'");
             }
-            
-            return methodMap[methodName].Execute(args);
         }
 
         public PhotinoApi RegisterModule<T>() where T : IPhotinoModule

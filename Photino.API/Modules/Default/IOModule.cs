@@ -2,45 +2,45 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PhotinoAPI.Modules.Default
 {
     [PhotinoName("io")]
     internal class IOModule : PhotinoModuleBase
     {
-        [PhotinoName("readFile")]
-        public static byte[] ReadFile(string path) => File.ReadAllBytes(path);
+        public static async Task<byte[]> ReadFile(string path) => await File.ReadAllBytesAsync(path);
 
-        public static string ReadFileText(string path, string encoding = null)
+        public static async Task<string> ReadFileText(string path, string encoding = null)
         {
             if (encoding == null || !TryGetEncoding(encoding, out var enc))
-                return File.ReadAllText(path);
-            return File.ReadAllText(path, enc);
+                return await File.ReadAllTextAsync(path);
+            return await File.ReadAllTextAsync(path, enc);
         }
 
-        public static string[] ReadFileLines(string path, string encoding = null)
+        public static async Task<string[]> ReadFileLines(string path, string encoding = null)
         {
             if (encoding == null || !TryGetEncoding(encoding, out var enc))
-                return File.ReadAllLines(path);
-            return File.ReadAllLines(path, enc);
+                return await File.ReadAllLinesAsync(path);
+            return await File.ReadAllLinesAsync(path, enc);
         }
         
-        public static void WriteFile(string path, byte[] data) => File.WriteAllBytes(path, data);
+        public static async Task WriteFile(string path, byte[] data) => await File.WriteAllBytesAsync(path, data);
 
-        public static void WriteFileText(string path, string contents, string encoding = null)
+        public static async Task WriteFileText(string path, string contents, string encoding = null)
         {
             if (encoding == null || !TryGetEncoding(encoding, out var enc))
-                File.WriteAllText(path, contents);
+                await File.WriteAllTextAsync(path, contents);
             else
-                File.WriteAllText(path, contents, enc);
+                await File.WriteAllTextAsync(path, contents, enc);
         }
 
-        public static void WriteFileLines(string path, string[] contents, string encoding = null)
+        public static async Task WriteFileLines(string path, string[] contents, string encoding = null)
         {
             if (encoding == null || !TryGetEncoding(encoding, out var enc))
-                File.WriteAllLines(path, contents);
+                await File.WriteAllLinesAsync(path, contents);
             else
-                File.WriteAllLines(path, contents, enc);
+                await File.WriteAllLinesAsync(path, contents, enc);
         }
 
         public static string[] ListFiles(string path, string searchPattern = null, bool recursive = false)
