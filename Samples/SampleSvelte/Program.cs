@@ -16,7 +16,11 @@ namespace SampleSvelte
                 .SetUseOsDefaultSize(false)
                 .Center()
                 .RegisterApi(api)
+#if DEBUG
+                .Load("http://localhost:3000");
+#else
                 .Load("wwwroot/index.html");
+#endif
             window.WaitForClose();
         }
     }
