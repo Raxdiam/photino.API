@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -30,7 +31,10 @@ namespace PhotinoAPI.Modules
         {
             var allArgs = ResolveArguments(args);
             if (IsAsync) {
-                return await (dynamic)Info?.Invoke(ModuleInstance, allArgs);
+                var task = (Task)Info.Invoke(ModuleInstance, allArgs);
+                await task;
+                var result = task.GetType().GetProperty("Result").GetValue(task);
+                return result;
             }
 
             return await Task.Run(() => Info.Invoke(ModuleInstance, allArgs));

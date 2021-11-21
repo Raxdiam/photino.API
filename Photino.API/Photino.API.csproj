@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>PhotinoAPI</RootNamespace>
 	<Platforms>AnyCPU;x64</Platforms>
-	<Version>1.1.1-alpha</Version>
+	<Version>1.2.1-exp</Version>
 	<Authors>Raxdiam</Authors>
 	<Description>API for performing back-end logic via Photino.NET and .NET 5 from the font-end.</Description>
 	<PackageProjectUrl>https://github.com/Raxdiam/photino.API</PackageProjectUrl>
@@ -12,7 +12,6 @@
 	<RepositoryUrl>https://github.com/Raxdiam/photino.API</RepositoryUrl>
 	<PackageTags>photino</PackageTags>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
-	<PackageVersion>1.2.0-exp</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
