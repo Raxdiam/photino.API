@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>PhotinoAPI</RootNamespace>
 	<Platforms>AnyCPU;x64</Platforms>
-	<Version>1.2.1-exp</Version>
+	<Version>1.2.2-exp</Version>
 	<Authors>Raxdiam</Authors>
-	<Description>API for performing back-end logic via Photino.NET and .NET 5 from the font-end.</Description>
+	<Description>API for performing back-end logic via Photino.NET and .NET 6 from the font-end.</Description>
 	<PackageProjectUrl>https://github.com/Raxdiam/photino.API</PackageProjectUrl>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<RepositoryUrl>https://github.com/Raxdiam/photino.API</RepositoryUrl>
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Photino.NET" Version="2.0.20" />
+    <PackageReference Include="Photino.NET" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
