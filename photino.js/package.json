@@ -15,7 +15,7 @@
   "author": "Raxdiam (https://github.com/Raxdiam)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Raxdiam/Photino.API/photino.js"
+    "url": "https://github.com/Raxdiam/photino.API/tree/v2/photino.js"
   },
   "license": "GPL-3.0",
   "devDependencies": {
