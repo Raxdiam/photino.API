@@ -38,6 +38,7 @@
         public void Load(string path) => Api.Window.Load(path);
         public void LoadRawString(string content) => Api.Window.LoadRawString(content);
 
+        public void ShowSystemMenu() => Api.Window.ShowSystemMenu();
         public void Center() => Api.Window.Center();
     }
 }

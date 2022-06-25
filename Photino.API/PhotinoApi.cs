@@ -140,21 +140,20 @@ namespace PhotinoAPI
 
             var dir = e.Split(':')[1];
             var hitTest = dir switch {
-                "drag" => PhotinoHitTest.Caption,
-                "se" => PhotinoHitTest.BottomRight,
-                "e" => PhotinoHitTest.Right,
-                "s" => PhotinoHitTest.Bottom,
-                "ne" => PhotinoHitTest.TopRight,
-                "n" => PhotinoHitTest.Top,
-                "nw" => PhotinoHitTest.TopLeft,
-                "w" => PhotinoHitTest.Left,
-                "sw" => PhotinoHitTest.BottomLeft,
+                "drag" => HitTest.Drag,
+                "left" => HitTest.Left,
+                "right" => HitTest.Right,
+                "top" => HitTest.Top,
+                "topLeft" => HitTest.TopLeft,
+                "topRight" => HitTest.TopRight,
+                "bottom" => HitTest.Bottom,
+                "bottomLeft" => HitTest.BottomLeft,
+                "bottomRight" => HitTest.BottomRight,
                 _ => default
             };
 
             if (hitTest == default) return;
-
-            PhotinoUtil.HitTest(_window, hitTest);
+            _window.PerformHitTest(hitTest);
         }
         
         public object ExecuteModuleMethod(string moduleName, string methodName, params object[] args)

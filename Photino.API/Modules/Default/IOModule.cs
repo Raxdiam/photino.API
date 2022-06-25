@@ -43,6 +43,10 @@ namespace PhotinoAPI.Modules.Default
                 await File.WriteAllLinesAsync(path, contents, enc);
         }
 
+        public static void MoveFile(string path, string destination) => File.Move(path, destination);
+
+        public static void MoveFolder(string path, string destination) => Directory.Move(path, destination);
+
         public static string[] ListFiles(string path, string searchPattern = null, bool recursive = false)
         {
             if (searchPattern != null && recursive) return Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories);

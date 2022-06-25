@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -7,30 +8,16 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using PhotinoAPI.Modules;
-using PhotinoNET;
 
 namespace PhotinoAPI
 {
     internal static class PhotinoUtil
     {
-        private const int WM_NCLBUTTONDOWN = 0xA1;
-
-        [DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
-
-        [DllImport("user32.dll")]
-        public static extern bool ReleaseCapture();
-
         public static readonly JsonSerializerSettings JsonSettings = new() {
             NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            Converters = new List<JsonConverter> { new JsonInt32Converter() }
         };
-        
-        public static void HitTest(PhotinoWindow window, PhotinoHitTest hitTest)
-        {
-            ReleaseCapture();
-            SendMessage(window.WindowHandle, WM_NCLBUTTONDOWN, (int)hitTest, 0);
-        }
 
         public static string GetModuleName(Type type)
         {
@@ -95,18 +82,5 @@ namespace PhotinoAPI
                 return OSPlatform.Create("Unknown");
             }
         }
-    }
-
-    internal enum PhotinoHitTest
-    {
-        Caption = 2,
-        Left = 10,
-        Right = 11,
-        Top = 12,
-        TopLeft = 13,
-        TopRight = 14,
-        Bottom = 15,
-        BottomLeft = 16,
-        BottomRight = 17
     }
 }
