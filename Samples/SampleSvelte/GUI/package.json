@@ -9,18 +9,18 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.28",
+    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.31",
     "@tsconfig/svelte": "^2.0.1",
-    "sass": "^1.43.2",
-    "svelte": "^3.43.2",
-    "svelte-check": "^2.2.7",
-    "svelte-preprocess": "^4.9.8",
+    "sass": "^1.45.0",
+    "svelte": "^3.44.3",
+    "svelte-check": "^2.2.10",
+    "svelte-preprocess": "^4.10.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.4",
-    "vite": "^2.6.7",
-    "vite-plugin-singlefile": "^0.5.1"
+    "typescript": "^4.5.3",
+    "vite": "^2.7.2",
+    "vite-plugin-singlefile": "^0.6.2"
   },
   "dependencies": {
-    "photino.js": "^1.0.5"
+    "photino.js": "github:raxdiam/photino.js#experimental"
   }
 }
